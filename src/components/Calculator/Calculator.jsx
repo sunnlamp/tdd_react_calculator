@@ -9,15 +9,65 @@ class Calculator extends Component {
     numbers: ['9', '8', '7', '6', '5', '4', '3', '2', '1', '.', '0', 'ce'],
     operators: ['/', 'x', '-', '+'],
     selectedOperator: '',
-    storesValue: ''
+    storedValue: ''
   }
 
   callOperator = () => {
-    console.log('call operation');
+    let { displayValue, selectedOperator, storedValue } = this.state;
+    // temp variable for updating state storedValue
+    const updateStoredValue = displayValue;
+
+    // parse strings for operations
+    displayValue = parseInt(displayValue, 10);
+    storedValue = parseInt(storedValue, 10);
+
+    // performs selected operation
+    switch (selectedOperator) {
+      case '+':
+        displayValue = storedValue + displayValue;
+        break;
+      case '-':
+        displayValue = storedValue - displayValue;
+        break;
+      case 'x':
+        displayValue = storedValue * displayValue;
+        break;
+      case '/':
+        displayValue = storedValue / displayValue;
+        break;
+      default:
+        // set displayValue to zero if no case matches
+        displayValue = '0';
+    }
+
+    // converts displayValue to a string
+    displayValue = displayValue.toString();
+    // reset selectedOperator
+    selectedOperator = '';
+    // check for 'NaN' or 'Infinity', if true set displayValue to '0'
+    if (displayValue === 'NaN' || displayValue === 'Infinity') displayValue = '0';
+
+    this.setState({ displayValue, selectedOperator, storedValue: updateStoredValue });
   }
 
-  setOperator = () => {
-    console.log('set operation');
+  setOperator = value => {
+    let { displayValue, selectedOperator, storedValue } = this.state;
+
+    // check if a value is already present for selectedOperator
+    if (selectedOperator === '') {
+      // update storedValue to the value of displayValue
+      storedValue = displayValue;
+      // reset the value of displayValue to '0'
+      displayValue = '0';
+      // update the value of selectedOperator to the given value
+      selectedOperator = value;
+    } else {
+      // if selectedOperator is not an empty string
+      // update the value of selectedOperator to the given value
+      selectedOperator = value;
+    }
+
+    this.setState({ displayValue, selectedOperator, storedValue });
   }
 
   updateDisplay = value => {
